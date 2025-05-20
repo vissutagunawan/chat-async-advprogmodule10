@@ -37,3 +37,16 @@ In the first scenario, connections failed because there was a port mismatch - th
 In the second scenario, successful connections were established because the server and all clients were configured to use the same port (8080). When both the server and clients targeted the identical port number, they could successfully establish communication channels.
 
 This demonstrates a core networking concept: for client-server communication to work, the server must be actively listening on the precise port that clients are trying to connect to. Without this port alignment, the connection attempts will fail because the server isn't monitoring the port where clients are knocking.
+
+### Change info
+
+![server](server_ver4.png)
+![client1](client1_ver4.png)
+![client2](client2_ver4.png)
+![client3.png](client3_ver4.png)
+
+By updating the handle_connection function to incorporate {addr:?} in the broadcast message format (bcast_tx.send(format!("{addr:?}: {text:?}"))?;), each transmitted message now includes identification details showing which client originated it. This solution uses the socket address (combining IP address and port number) as a unique marker for each client connection, enabling all participants to see the sender of every message.
+
+The decision to implement this change on the server side rather than modifying how clients display messages was strategic. Centralizing this logic at the message distribution level ensures that all clients receive consistently formatted messages without requiring individual clients to process or decode raw message data.
+
+This design choice also preserves the server's architectural role as the central message handler in the chat system. By keeping the formatting responsibility with the server, client applications remain streamlined and can focus primarily on user interaction and message display, rather than having to handle message parsing and formatting tasks.
